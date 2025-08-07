@@ -1,5 +1,11 @@
 <?php
 
+namespace App\Models;
+
+use App\Models\Sql;
+use DateTime;
+use Exception;
+
 class Usuario{
 	private $idusuario;
 	private $deslogin;

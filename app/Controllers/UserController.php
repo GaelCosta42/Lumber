@@ -1,25 +1,63 @@
 <?php
 
-namespace app\Controllers;
+namespace App\Controllers;
+
+use App\Models\Usuario;
 
 class UserController
 {
     public function index(): void
     {
-        echo json_encode([
-            ['id' => 1, 'nome' => 'João'],
-            ['id' => 2, 'nome' => 'Maria'],
-        ]);
+        $usuarios = Usuario::getList();
+        echo json_encode($usuarios, JSON_UNESCAPED_UNICODE);
     }
 
     public function show($id): void
     {
-        echo json_encode(['id' => $id, 'nome' => 'João']);
+        $usuario = new Usuario();
+        $usuario->loadById($id);
+        echo $usuario;
     }
 
     public function store(): void
     {
         $data = json_decode(file_get_contents('php://input'), true);
-        echo json_encode(['success' => true, 'dados' => $data]);
+
+        if (!isset($data['login']) || !isset($data['senha'])) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Login e senha são obrigatórios']);
+            return;
+        }
+
+        $usuario = new Usuario($data['login'], $data['senha']);
+        $usuario->insert();
+
+        echo $usuario;
+    }
+
+    public function update($id): void
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        if (!isset($data['login']) || !isset($data['senha'])) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Login e senha são obrigatórios']);
+            return;
+        }
+
+        $usuario = new Usuario();
+        $usuario->loadById($id);
+        $usuario->update($data['login'], $data['senha']);
+
+        echo $usuario;
+    }
+
+    public function delete($id): void
+    {
+        $usuario = new Usuario();
+        $usuario->loadById($id);
+        $usuario->delete();
+
+        echo json_encode(['message' => 'Usuário excluído com sucesso']);
     }
 }
