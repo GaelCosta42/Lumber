@@ -23,14 +23,14 @@ class UserController
     {
         $data = json_decode(file_get_contents('php://input'), true);
 
-        if (!isset($data['login']) || !isset($data['senha'])) {
+        if (!isset($data['deslogin']) || !isset($data['dessenha'])) {
             http_response_code(400);
             echo json_encode(['error' => 'Login e senha são obrigatórios']);
             return;
         }
 
-        $usuario = new Usuario($data['login'], $data['senha']);
-        $usuario->insert();
+        $usuario = new Usuario($data['deslogin'], $data['dessenha']);
+        $usuario->insert($data['deslogin'], $data['dessenha']);
 
         echo $usuario;
     }
@@ -54,10 +54,19 @@ class UserController
 
     public function delete($id): void
     {
-        $usuario = new Usuario();
-        $usuario->loadById($id);
-        $usuario->delete();
+        try 
+        {
+            $usuario = new Usuario();
+            $usuario->loadById($id);
+            $usuario->delete();
 
-        echo json_encode(['message' => 'Usuário excluído com sucesso']);
+            echo json_encode(['message' => 'Usuário excluído com sucesso']);
+        } 
+        catch (\Exception $e) 
+        {
+            http_response_code(400);
+            echo json_encode(['error' => $e->getMessage()]);
+        }
     }
+
 }

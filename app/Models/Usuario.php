@@ -42,7 +42,8 @@ class Usuario{
 		$this->dessenha = $dessenha;
 	}
 
-	public function getDtcadastro(){
+	public function getDtcadastro()
+	{
 		return $this->dtcadastro;
 	}
 
@@ -115,41 +116,42 @@ class Usuario{
 		$this->setDtcadastro(new DateTime($data['dtcadastro']));
 	}
 
-	public function insert()
+	public function insert($login, $senha)
 	{
 		$sql = new Sql();
 
 		$result = $sql->select
 		(
-			"CALL sp_usuarios_insert(:LOGIN, :PASSWORD)", 
+			"INSERT INTO tb_usuario (deslogin, dessenha) VALUES (:LOGIN, :PASSWORD)", 
 			array
 			(
-				':LOGIN'=>$this->getLogin(),
-				':PASSWORD'=>$this->getSenha()
+				':LOGIN'=>$this->getLogin($login),
+				':PASSWORD'=>$this->getSenha($senha)
 			)
 		);
-
-		if(count($result) > 0){
-			$this->setData($result[0]);
-		}
 	}
 
 	public function delete()
 	{
 		$sql = new Sql();
 
-		$sql->execQuery("DELETE FROM tb_usuario WHERE idusuario = :ID", 
-			array
-			(
-				':ID'=>$this->getIdusuario()
-			)
+		$dependentes = $sql->select(
+			"SELECT COUNT(*) as total FROM tb_caixa WHERE idusuario = :ID",
+			[':ID' => $this->getIdusuario()]
 		);
+
+		if ($dependentes[0]['total'] > 0) {
+			throw new \Exception("Não é possível excluir o usuário. Existem caixas associadas a ele.");
+		}
+
+		$sql->execQuery("DELETE FROM tb_usuario WHERE idusuario = :ID", [
+			':ID' => $this->getIdusuario()
+		]);
 
 		$this->setIdusuario(0);
 		$this->setLogin("");
 		$this->setSenha("");
-		$this->setDtcadastro(new DateTime());
-
+		$this->setDtcadastro(new \DateTime());
 	}
 
 	public function update($login, $senha)
@@ -165,7 +167,8 @@ class Usuario{
 		));
 	}
 
-	public function __construct($deslogin = "", $dessenha = ""){
+	public function __construct($deslogin = "", $dessenha = "")
+	{
 		$this->setLogin($deslogin);
 		$this->setSenha($dessenha);
 	}

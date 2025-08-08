@@ -19,6 +19,8 @@ class Router
         $this->add('POST',   '/users',         ['App\Controllers\UserController', 'store']);
         $this->add('PUT',    '/users/{id}',    ['App\Controllers\UserController', 'update']);
         $this->add('DELETE', '/users/{id}',    ['App\Controllers\UserController', 'delete']);
+        $this->add('POST', '/caixa/abrir', ['App\Controllers\CaixaController', 'abrirViaRequest']);
+
     }
 
     private function add(string $method, string $route, array $handler): void

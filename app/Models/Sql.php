@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use PDO;
+use PDOException;
 
 class Sql extends PDO
 {
@@ -30,9 +31,7 @@ class Sql extends PDO
 	public function execQuery($rawQuery, $params = array())
 	{
 		$stmt = $this->conn->prepare($rawQuery);
-
 		$this->setParams($stmt, $params);
-
 		$stmt->execute();
 
 		return $stmt;

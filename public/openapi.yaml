@@ -11,6 +11,8 @@ paths:
   /users:
     get:
       summary: Lista todos os usuários
+      tags:
+        - Usuários
       responses:
         '200':
           description: Lista de usuários
@@ -21,20 +23,32 @@ paths:
                 items:
                   type: object
                   properties:
-                    id:
+                    idusuario:
                       type: integer
-                    nome:
+                    deslogin:
                       type: string
+                    dessenha:
+                      type: string
+                    dtcadastro:
+                      type: string
+                      format: date-time
     post:
       summary: Cria um novo usuário
+      tags:
+        - Usuários
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
+              required:
+                - deslogin
+                - dessenha
               properties:
-                nome:
+                deslogin:
+                  type: string
+                dessenha:
                   type: string
       responses:
         '200':
@@ -44,13 +58,15 @@ paths:
               schema:
                 type: object
                 properties:
-                  success:
-                    type: boolean
-                  dados:
-                    type: object
-                    properties:
-                      nome:
-                        type: string
+                  idusuario:
+                    type: integer
+                  deslogin:
+                    type: string
+                  dessenha:
+                    type: string
+                  dtcadastro:
+                    type: string
+                    format: date-time
   /users/{id}:
     get:
       summary: Retorna um usuário pelo ID
@@ -72,4 +88,61 @@ paths:
                   id:
                     type: integer
                   nome:
+                    type: string
+    put:
+      summary: Atualiza um usuário pelo ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - login
+                - senha
+              properties:
+                login:
+                  type: string
+                senha:
+                  type: string
+      responses:
+        '200':
+          description: Usuário atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  idusuario:
+                    type: integer
+                  deslogin:
+                    type: string
+                  dessenha:
+                    type: string
+                  dtcadastro:
+                    type: string
+                    format: date-time
+    delete:
+      summary: Exclui um usuário pelo ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Usuário excluído com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
                     type: string
