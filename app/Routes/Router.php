@@ -16,6 +16,7 @@ class Router
         // Registrando rotas usando o método `add`
         $this->add('GET',    '/users',         ['App\Controllers\UserController', 'index']);
         $this->add('GET',    '/users/{id}',    ['App\Controllers\UserController', 'show']);
+        $this->add('GET',    '/users/tipo/{id}',    ['App\Controllers\UserController', 'showTipoUsuario']);
         $this->add('POST',   '/users',         ['App\Controllers\UserController', 'store']);
         $this->add('PUT',    '/users/{id}',    ['App\Controllers\UserController', 'update']);
         $this->add('DELETE', '/users/{id}',    ['App\Controllers\UserController', 'delete']);
@@ -27,6 +28,7 @@ class Router
     {
         $this->routes[$this->customStrToUpper($method)][$route] = $handler;
     }
+    
     private function customStrToUpper(string $string): string
     {
         return mb_strtoupper($string, 'UTF-8');

@@ -19,6 +19,13 @@ class UserController
         echo $usuario;
     }
 
+    public function showTipoUsuario($id): void
+    {
+        $usuario = new Usuario();
+        $usuarios = $usuario->loadByTipoUsuario($id);
+        echo json_encode($usuarios);
+    }
+
     public function store(): void
     {
         $data = json_decode(file_get_contents('php://input'), true);

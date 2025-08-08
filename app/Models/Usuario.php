@@ -68,7 +68,33 @@ class Usuario{
 		}
 	}
 
-	//Como não utilizou o 'this' o método pode ser estático.
+	public function loadByTipoUsuario($id)
+	{
+		try
+		{
+			$sql = new Sql();
+
+			$result = $sql->select
+			(
+				"SELECT * FROM tb_usuario WHERE idtpusu = :ID", 
+				array(":ID"=>$id)
+			);
+
+			if(count($result) > 0)
+			{
+				$this->setData($result[0]);
+			}
+
+			return $result;
+		}
+		catch (Exception $e)
+		{
+			http_response_code(500);
+			echo json_encode(['error' => 'Erro ao carregar usuários por tipo: ' . $e->getMessage()]);
+			return [];
+		}
+	}
+
 	public static function getList()
 	{
 		$sql = new Sql();

@@ -70,6 +70,8 @@ paths:
   /users/{id}:
     get:
       summary: Retorna um usuário pelo ID
+      tags:
+        - Usuários
       parameters:
         - in: path
           name: id
@@ -91,6 +93,8 @@ paths:
                     type: string
     put:
       summary: Atualiza um usuário pelo ID
+      tags:
+        - Usuários
       parameters:
         - in: path
           name: id
@@ -130,6 +134,8 @@ paths:
                     format: date-time
     delete:
       summary: Exclui um usuário pelo ID
+      tags:
+        - Usuários
       parameters:
         - in: path
           name: id
@@ -146,3 +152,39 @@ paths:
                 properties:
                   message:
                     type: string
+  /users/tipo/{id}:
+    get:
+      summary: Retorna um usuário pelo tipo
+      tags:
+        - Usuários
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID tipo do usuário
+      responses:
+        '200':
+          description: Usuário encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  nome:
+                    type: string
+
+
+
+
+
+
+
+
+
+
+
+
